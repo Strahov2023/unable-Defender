@@ -53,6 +53,10 @@ try {
 }
 finally {
     Remove-Item -LiteralPath $generatedLauncherPath -Force -ErrorAction SilentlyContinue
+    if ((Test-Path -LiteralPath $objectDirectory) -and
+        -not (Get-ChildItem -LiteralPath $objectDirectory -Force -ErrorAction SilentlyContinue)) {
+        Remove-Item -LiteralPath $objectDirectory -Force -ErrorAction SilentlyContinue
+    }
 }
 
 $exeHash = (Get-FileHash -LiteralPath $outputPath -Algorithm SHA256).Hash.ToUpperInvariant()

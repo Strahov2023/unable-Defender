@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$RequireSignature
 )
@@ -17,7 +17,8 @@ Write-Host 'Defender Control — защитные тесты' -ForegroundColor C
 foreach ($file in Get-ChildItem -LiteralPath $root -Filter '*.ps1') {
     $tokens = $null
     $errors = $null
-    [System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$tokens, [ref]$errors) | Out-Null
+    $content = [System.IO.File]::ReadAllText($file.FullName, [System.Text.Encoding]::UTF8)
+    [System.Management.Automation.Language.Parser]::ParseInput($content, [ref]$tokens, [ref]$errors) | Out-Null
     if ($errors.Count -eq 0) { Add-Pass "Синтаксис: $($file.Name)" }
     else { Add-Failure "Синтаксис $($file.Name): $($errors[0].Message)" }
 }
