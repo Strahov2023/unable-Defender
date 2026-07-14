@@ -1,0 +1,5 @@
+.agents/
+bin/
+obj/
+*.pdb
+*.tmp
