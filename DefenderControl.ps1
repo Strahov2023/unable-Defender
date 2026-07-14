@@ -4,6 +4,10 @@ param()
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
 
+# Типы WinForms используются в сигнатурах функций и должны быть доступны до их объявления.
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
 $script:AppName = 'Defender Control'
 $script:AppVersion = '1.3.0'
 $script:TaskName = 'DefenderControl-AutoReenable'
@@ -622,8 +626,6 @@ function Initialize-Interface {
 }
 
 try {
-    Add-Type -AssemblyName System.Windows.Forms
-    Add-Type -AssemblyName System.Drawing
     [System.Windows.Forms.Application]::EnableVisualStyles()
 
     if (-not (Test-Administrator)) {

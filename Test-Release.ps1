@@ -28,6 +28,16 @@ $exePath = Join-Path $root 'DefenderControl.exe'
 $launcherPath = Join-Path $root 'src\Launcher.cs'
 $manifestPath = Join-Path $root 'src\app.manifest'
 
+$scriptContent = [System.IO.File]::ReadAllText($scriptPath, [System.Text.Encoding]::UTF8)
+$formsLoadIndex = $scriptContent.IndexOf('Add-Type -AssemblyName System.Windows.Forms', [StringComparison]::Ordinal)
+$firstFormsTypeIndex = $scriptContent.IndexOf('[System.Windows.Forms.', [StringComparison]::Ordinal)
+if (($formsLoadIndex -ge 0) -and ($firstFormsTypeIndex -ge 0) -and ($formsLoadIndex -lt $firstFormsTypeIndex)) {
+    Add-Pass 'WinForms загружается до объявления типизированных функций.'
+}
+else {
+    Add-Failure 'System.Windows.Forms должен загружаться до первого использования WinForms-типа.'
+}
+
 if (-not (Test-Path -LiteralPath $exePath)) {
     Add-Failure 'DefenderControl.exe отсутствует.'
 }
